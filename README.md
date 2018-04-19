@@ -34,6 +34,9 @@ This will produce an output file with the following format
 Additional Options/Advanced Usage
 
 -w <int>    will produce windowed estimates of SD across each chromosome with window size -w <int>
+  
 -b <int>    will produce bootstrap estimates of SD position via resampling
+  
 -e <float>  uniform error rate per read
+  
 -t <float>  terminate optimation if successive points are within <float> likelihood units. 
