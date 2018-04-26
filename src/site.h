@@ -5,6 +5,7 @@ class site {
 public:
     
     int position ;
+    float cm ; 
     int A ;
     int a ;
     

@@ -8,10 +8,10 @@ void import_data( string &input, map<string,vector<site> > &germline, map<string
     while( !in.eof() ) {
         site new_site ;
         site germ_site ;
-        in >> chrom ;
-        in >> new_site.position >> new_site.A >> new_site.a >> germ_site.A >> germ_site.a ;
+        in >> chrom >> new_site.position >> new_site.cm >> new_site.A >> new_site.a >> germ_site.A >> germ_site.a ;
         
         germ_site.position = new_site.position ;
+        germ_site.cm = new_site.cm ; 
         
         somatic[chrom].push_back( new_site ) ;
         germline[chrom].push_back( germ_site ) ; 

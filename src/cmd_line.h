@@ -34,8 +34,7 @@ public:
 void cmd_line::read_cmd_line ( int argc, char *argv[] ) {
     
     /// set parameter defaults
-    data_file = "sites_ind1.txt" ;
-    rate_file = "rates.txt" ;
+    data_file = "sites_ind1.cm.txt" ;
     min_size = 1000 ;
     error = 1e-2 ;
     tolerance = 1e-4 ;
@@ -47,9 +46,6 @@ void cmd_line::read_cmd_line ( int argc, char *argv[] ) {
 
         if ( strcmp(argv[i],"-d") == 0 ) {
             data_file = argv[++i] ;
-        }
-        if ( strcmp(argv[i],"-r") == 0 ) {
-            rate_file = argv[++i] ;
         }
         if ( strcmp(argv[i],"-m") == 0 ) {
             min_size = atoi(argv[++i]) ;

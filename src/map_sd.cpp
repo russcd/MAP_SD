@@ -14,7 +14,6 @@ using namespace std ;
 #include "cmd_line.h"
 #include "site.h"
 #include "import_data.h" 
-#include "import_rates.h"
 #include "compute_likelihood.h" 
 #include "golden_search.h"
 #include "window.h" 
@@ -30,32 +29,16 @@ int main ( int argc, char **argv ) {
     /// data objects
     map<string,vector<site> > somatic ;
     map<string,vector<site> > germline ;
-    map<string,double> rates ;
     
     /// read data object
     import_data( options.data_file, germline, somatic ) ;
-    
-    /// read map
-    import_rates( options.rate_file, rates ) ;
-    
-    /// delete contigs with no rates
-    for ( auto i = somatic.begin() ; i != somatic.end() ; ++ i ) {
-        if ( rates.find(i->first) == rates.end() ) {
-            somatic.erase( i ) ;
-        }
-    }
-    for ( auto i = germline.begin() ; i != germline.end() ; ++ i ) {
-        if ( rates.find(i->first) == rates.end() ) {
-            germline.erase( i ) ;
-        }
-    }
     
     /// output windows across chromosomes
     if ( options.window != 0 && options.bootstrap == 0 ) {
         
         for ( auto i = germline.begin() ; i != germline.end() ; ++ i ) {
             
-            window( i->first, germline[i->first], somatic[i->first],options, rates[i->first] ) ;
+            window( i->first, germline[i->first], somatic[i->first],options ) ;
         }
     }
     
@@ -91,13 +74,13 @@ int main ( int argc, char **argv ) {
                     sort( bootstrap_germline.begin(), bootstrap_germline.end() ) ; 
                     
                     /// find the site with the maximum differnce in lnl
-                    boostrap_site.push_back( golden_search_position( options, bootstrap_somatic, bootstrap_germline, rates[i->first] ) ) ;
+                    boostrap_site.push_back( golden_search_position( options, bootstrap_somatic, bootstrap_germline ) ) ;
                     
                     /// compute k at each site
-                    double somatic_k = golden_search_site( options, somatic[i->first], rates[i->first], boostrap_site.back() ) ;
-                    double germline_k = golden_search_site( options, germline[i->first], rates[i->first], boostrap_site.back() ) ;
+                    double somatic_k = golden_search_site( options, somatic[i->first], boostrap_site.back() ) ;
+                    double germline_k = golden_search_site( options, germline[i->first],  boostrap_site.back() ) ;
                     
-                    cout << i->first << "\t" << b << "\t" << boostrap_site.back() << "\t" << somatic_k << "\t" << germline_k << "\t" << compute_likelihood( options.error, rates[i->first], bootstrap_germline, boostrap_site.back(), somatic_k ) << "\t" << compute_likelihood( options.error, rates[i->first], bootstrap_germline, boostrap_site.back(), germline_k ) << endl ;
+                    cout << i->first << "\t" << b << "\t" << boostrap_site.back() << "\t" << somatic_k << "\t" << germline_k << "\t" << compute_likelihood( options.error, bootstrap_germline, boostrap_site.back(), somatic_k ) << "\t" << compute_likelihood( options.error, bootstrap_germline, boostrap_site.back(), germline_k ) << endl ;
                 }
             }
         }
@@ -109,13 +92,13 @@ int main ( int argc, char **argv ) {
         for ( auto i = germline.begin() ; i != germline.end() ; ++ i ) {
 
             /// find the site with the maximum differnce in lnl
-            double optimum_site = golden_search_position( options, somatic[i->first], germline[i->first], rates[i->first] ) ;
+            double optimum_site = golden_search_position( options, somatic[i->first], germline[i->first] ) ;
             
             /// compute k at each site
-            double somatic_k = golden_search_site( options, somatic[i->first], rates[i->first], optimum_site ) ;
-            double germline_k = golden_search_site( options, germline[i->first], rates[i->first], optimum_site ) ;
+            double somatic_k = golden_search_site( options, somatic[i->first], optimum_site ) ;
+            double germline_k = golden_search_site( options, germline[i->first], optimum_site ) ;
             
-            cout << i->first << "\t" << optimum_site << "\t" << somatic_k << "\t" << germline_k << "\t" << compute_likelihood( options.error, rates[i->first], germline[i->first], optimum_site, somatic_k ) << "\t" << compute_likelihood( options.error, rates[i->first], germline[i->first], optimum_site, germline_k ) << endl ;
+            cout << i->first << "\t" << optimum_site << "\t" << somatic_k << "\t" << germline_k << "\t" << compute_likelihood( options.error, germline[i->first], optimum_site, somatic_k ) << "\t" << compute_likelihood( options.error, germline[i->first], optimum_site, germline_k ) << endl ;
         }
     }
     

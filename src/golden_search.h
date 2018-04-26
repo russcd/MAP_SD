@@ -3,7 +3,7 @@
 
 /// golden section search for single parameter optimization
 /// not currently included, but may be useful to legacy versions 
-double golden_search_site ( cmd_line &options, vector<site> &s, double &rate, int site ) {
+double golden_search_site ( cmd_line &options, vector<site> &s, int site ) {
     
     /// now do golden search until we reach tolerance threshhold and stop
     double phi = ( sqrt(5) - 1 ) / 2 ;
@@ -25,12 +25,12 @@ double golden_search_site ( cmd_line &options, vector<site> &s, double &rate, in
         
         /// compute likelihood of low point
         if ( lnl_low == 0 ) {
-            lnl_low = compute_likelihood( options.error, rate, s, site, param_low ) ;
+            lnl_low = compute_likelihood( options.error, s, site, param_low ) ;
         }
                 
         /// compute likelihood of high point
         if ( lnl_high == 0 ) {
-            lnl_high = compute_likelihood( options.error, rate, s, site, param_high ) ;
+            lnl_high = compute_likelihood( options.error, s, site, param_high ) ;
         }
                 
         /// record dfiference
@@ -62,7 +62,7 @@ double golden_search_site ( cmd_line &options, vector<site> &s, double &rate, in
 }
 
 /// golden section search for position
-double golden_search_position ( cmd_line &options, vector<site> &somatic, vector<site> &germline, double &rate ) {
+double golden_search_position ( cmd_line &options, vector<site> &somatic, vector<site> &germline ) {
     
     /// now do golden search until we reach tolerance threshhold and stop
     double phi = ( sqrt(5) - 1 ) / 2 ;
@@ -85,26 +85,24 @@ double golden_search_position ( cmd_line &options, vector<site> &somatic, vector
         /// compute likelihood of low point
         if ( lnl_low == 0 ) {
             
-            double somatic_k = golden_search_site( options, somatic, rate, param_low ) ;
-            double germline_k = golden_search_site( options, germline, rate, param_low ) ;
+            double somatic_k = golden_search_site( options, somatic, param_low ) ;
+            double germline_k = golden_search_site( options, germline, param_low ) ;
             
-            lnl_low = compute_likelihood( options.error, rate, germline, param_low, germline_k ) -compute_likelihood( options.error, rate, germline, param_low, somatic_k ) ;
+            lnl_low = compute_likelihood( options.error, germline, param_low, germline_k ) -compute_likelihood( options.error, germline, param_low, somatic_k ) ;
         }
         
         /// compute likelihood of high point
         if ( lnl_high == 0 ) {
             
-            double somatic_k = golden_search_site( options, somatic, rate, param_high ) ;
-            double germline_k = golden_search_site( options, germline, rate, param_high ) ;
+            double somatic_k = golden_search_site( options, somatic, param_high ) ;
+            double germline_k = golden_search_site( options, germline, param_high ) ;
             
-            lnl_high = compute_likelihood( options.error, rate, germline, param_high, germline_k ) - compute_likelihood( options.error, rate, germline, param_high, somatic_k ) ;
+            lnl_high = compute_likelihood( options.error, germline, param_high, germline_k ) - compute_likelihood( options.error, germline, param_high, somatic_k ) ;
         }
         
         /// record dfiference
         lnl_diff = abs( lnl_low - lnl_high ) ;
-        
-        //cout << iteration << "\t" << low_bracket << "\t" << param_low << "\t" << param_high << "\t" << high_bracket << "\t" << lnl_low << "\t" << lnl_high << endl ;
-    
+            
         /// if true, we know that the maximum is between param_low and high_bracket
         if ( lnl_high >= lnl_low ) {
             low_bracket = param_low ;
