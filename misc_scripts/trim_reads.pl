@@ -1,3 +1,6 @@
+### scipt is designed to subsample a read length distribution of a second file to exactly match the first 
+###### Usage: perl trim_reads.pl file1.fq file2.fq 
+
 use strict ; 
 use warnings ; 
 
