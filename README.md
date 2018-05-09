@@ -3,11 +3,8 @@
 This software takes paired allele counts from somatic and germline samples to estimate the distortion 
 effect size and the map position of segregation distortion elements in the somtic sample. 
 
-It takes two input files.
-1. A data file with read counts supporting either parental chromosome by site. 
-2. A file that specifies a single chromsome-wide recombination rate in Morgans/bp for each chromosome to be considered. 
-
-The first file is tab delimited, with no header line and has the format:
+It takes a single input data file with read counts supporting either parental chromosome by site. 
+The  file is tab delimited, with no header line and has the format:
 1. Chromosome ID. 
 2. Position in basepairs.
 3. Map position in centimorgans.
