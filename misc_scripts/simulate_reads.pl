@@ -33,7 +33,7 @@ foreach my $effect ( 0, 0.01 ) {
             print OUT "scaffold_X\t$position\t", $cm{$position}, "\t", $drawA, "\t", $somatic_depth{$position} - $drawA, "\t" ;
             
             ### recombination rate
-            my $rec = 1 - exp( ( -2 * abs( $cm{$site} - $cm{$position} )/100 )/ 2 )  ;
+            my $rec = ( 1 - exp( -2 * abs( $cm{$site} - $cm{$position} )/100 ) )/ 2 ;
             
             ### draw before recombination
             $drawA = Math::Random::random_binomial( 1, $germline_depth{$position}, 0.5+$effect ) ;
