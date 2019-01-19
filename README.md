@@ -1,7 +1,7 @@
 # MAP_SD
 
 This software takes paired allele counts from somatic and germline samples to estimate the distortion 
-effect size and the map position of segregation distortion elements in the somtic sample. 
+effect size and the map position of segregation distortion elements in the germline sample. 
 
 It takes a single input data file with read counts supporting either parental chromosome by site. 
 The  file is tab delimited, with no header line and has the format:
